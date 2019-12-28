@@ -59,12 +59,9 @@ public class Main
         request.object = "UserController";
         request.method = "login";
         
-        request.parameters.put("full_name", "Mahmoud Ahmed");
-        request.parameters.put("password", "124567");
         request.parameters.put("email", "mahmoud@gmail.com");
-        request.parameters.put("gender", "male");
-        request.parameters.put("country", "Egypt");
-        request.parameters.put("birthday", "1997-12-08");
+        request.parameters.put("password", "124567");
+
         
         // HTTPRouter
         HTTPRouter router = new HTTPRouter(request);

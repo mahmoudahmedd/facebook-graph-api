@@ -17,22 +17,18 @@ import models.User;
  */
 public class UserView extends View
 {
-    public User user;
-    public ArrayList<User> users;
-    
-    @Override
-    public JSONObject render()
+    public JSONObject render(User _user)
     {
         // creating JSONObject 
         JSONObject jo = new JSONObject(); 
         HashMap<String, String> userM = new HashMap<String, String>();
 
-        userM.put("full_name", user.fullName); 
-        userM.put("password", user.password); 
-        userM.put("email", user.email); 
-        userM.put("gender", user.gender); 
-        userM.put("country", user.country); 
-        userM.put("birthday", user.birthday); 
+        userM.put("email", _user.email); 
+        userM.put("password", _user.password); 
+        userM.put("gender", _user.gender); 
+        userM.put("country", _user.country); 
+        userM.put("account_type", _user.accountType); 
+        userM.put("birthday", _user.birthday); 
         
         // putting data to JSONObject 
         jo.put("status", "ok"); 
@@ -43,9 +39,4 @@ public class UserView extends View
         return jo;
     }
     
-    @Override
-    public JSONObject renderAll()
-    {
-        return null;
-    }
 }

@@ -7,17 +7,27 @@ package utilities;
 
 import models.User;
 
+import java.sql.SQLException;
+
 /**
  *
  * @author Mahmoud Ahmed
  */
 public class UserDAO 
 {
+    public DBUtil db;
+    
+    public UserDAO() throws SQLException
+    {
+        
+        db = DBUtil.getInstance();
+        
+    }
     public void addUser(User _user)
     {
         try
         {
-            DBUtil.executeCommand("INSERT INTO `users`(`email`, `password`, `gender`, `country`, `birthday`) "
+            db.executeCommand("INSERT INTO `users`(`email`, `password`, `gender`, `country`, `birthday`) "
                                + "VALUES ('" + _user.email + "', '" + _user.password + "', '" + _user.gender + "', '" + _user.country + "', '" + _user.birthday + "')");
         } 
         catch(Exception _ex) 
@@ -30,7 +40,7 @@ public class UserDAO
     {
         try
         {
-            DBUtil.executeCommand("INSERT INTO `friendships`(`by`, `to`) VALUES ('" + _by + "', '" + _to + "')");
+            db.executeCommand("INSERT INTO `friendships`(`by`, `to`) VALUES ('" + _by + "', '" + _to + "')");
         } 
         catch(Exception _ex) 
         {
@@ -42,7 +52,7 @@ public class UserDAO
     {
         try
         {
-            DBUtil.executeCommand("UPDATE `friendships` SET `status`= '" + 1 + "' WHERE `by`='" + _by + "' AND `to`='" + _to + "' ");
+            db.executeCommand("UPDATE `friendships` SET `status`= '" + 1 + "' WHERE `by`='" + _by + "' AND `to`='" + _to + "' ");
         } 
         catch(Exception _ex) 
         {
@@ -54,7 +64,7 @@ public class UserDAO
     {
         try
         {
-            DBUtil.executeCommand("UPDATE `users` SET " + 
+            db.executeCommand("UPDATE `users` SET " + 
                                 "`email`='" + _user.email + 
                                 "',`password`='" + _user.password + 
                                 "',`gender`='" + _user.gender + 
@@ -75,16 +85,17 @@ public class UserDAO
         
         try
         {
-            DBUtil.resultSet = DBUtil.selectData("SELECT * FROM `users` WHERE `email` = '" + _email + "' AND `password` = '" + _password + "' LIMIT 1");
+            db.resultSet = db.selectData("SELECT * FROM `users` WHERE `email` = '" + _email + "' AND `password` = '" + _password + "' LIMIT 1");
             
-            if(DBUtil.resultSet.next()) 
+            if(db.resultSet.next()) 
             {
-                user.userId = DBUtil.resultSet.getInt(1);
-                user.email = DBUtil.resultSet.getString(2);
-                user.password = DBUtil.resultSet.getString(3);
-                user.gender = DBUtil.resultSet.getString(4);
-                user.country = DBUtil.resultSet.getString(5);
-                user.birthday = DBUtil.resultSet.getString(6);
+                user.userId = db.resultSet.getInt(1);
+                user.email = db.resultSet.getString(2);
+                user.password = db.resultSet.getString(3);
+                user.gender = db.resultSet.getString(4);
+                user.country = db.resultSet.getString(5);
+                user.accountType = db.resultSet.getString(6);
+                user.birthday = db.resultSet.getString(7);
             }
             else
             {
@@ -105,17 +116,17 @@ public class UserDAO
         
         try
         {
-            DBUtil.resultSet = DBUtil.selectData("SELECT * FROM `users` WHERE `user_id` = '" + _userId + "' LIMIT 1");
+            db.resultSet = db.selectData("SELECT * FROM `users` WHERE `user_id` = '" + _userId + "' LIMIT 1");
             
-            if(DBUtil.resultSet.next()) 
+            if(db.resultSet.next()) 
             {
-                user.userId = DBUtil.resultSet.getInt(1);
-                user.email = DBUtil.resultSet.getString(2);
-                user.password = DBUtil.resultSet.getString(3);
-                user.gender = DBUtil.resultSet.getString(4);
-                user.country = DBUtil.resultSet.getString(5);
-                user.accountType = DBUtil.resultSet.getString(6);
-                user.birthday = DBUtil.resultSet.getString(7);
+                user.userId = db.resultSet.getInt(1);
+                user.email = db.resultSet.getString(2);
+                user.password = db.resultSet.getString(3);
+                user.gender = db.resultSet.getString(4);
+                user.country = db.resultSet.getString(5);
+                user.accountType = db.resultSet.getString(6);
+                user.birthday = db.resultSet.getString(7);
             }
             else
             {

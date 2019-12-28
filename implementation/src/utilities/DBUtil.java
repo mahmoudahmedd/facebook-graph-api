@@ -8,6 +8,7 @@ package utilities;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
@@ -16,78 +17,85 @@ import java.sql.Statement;
  */
 public class DBUtil 
 {
+    public static DBUtil instance;
+    
+    // Database URL
+    public final String DB_URL = "jdbc:mysql://localhost:3306/graph_api?useSSL=false";
+
+    // Database credentials
+    public final String USERNAME = "root";
+    public final String PASSWORD = "";
+    
     // Connection is the session between java application and database
-    public static Connection connection;
+    private Connection connection;
     
     // The Statement interface provides methods to execute queries with the database
-    public static Statement statement;
+    public Statement statement;
     
     // The query string value to the database
-    public static String query;
+    public String query;
     
     // The object of ResultSet maintains a cursor pointing to a row of a table
-    public static ResultSet resultSet;
+    public ResultSet resultSet;
     
-    private DBUtil() {}
-    
-    public static Connection getConnection() 
+    private DBUtil() throws SQLException 
     {
-        if(DBUtil.connection != null)
+        try
         {
-            return DBUtil.connection;
+            // Register JDBC driver
+            Class.forName("com.mysql.jdbc.Driver");  
+
+            // Open a connection
+            this.connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);  
         }
-        else
+        catch(Exception _ex)
         {
-            // Database URL
-            final String DB_URL = "jdbc:mysql://localhost:3306/graph_api?useSSL=false";
-
-            // Database credentials
-            final String USERNAME = "root";
-            final String PASSWORD = "";;
-            
-            try
-            {
-                // Register JDBC driver
-                Class.forName("com.mysql.jdbc.Driver");  
-            
-                // Open a connection
-                DBUtil.connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);  
-            }
-            catch(Exception _ex)
-            {
-                System.out.println(_ex.getMessage());
-            }
-
-            return DBUtil.connection;
+            System.out.println(_ex.getMessage());
         }
+        
     }
     
-    public static ResultSet selectData(String _query) throws Exception
+    public Connection getConnection() 
     {
-        DBUtil.getConnection();
-        
-        DBUtil.query = _query;
-        
-        // Creating statement
-        DBUtil.statement = DBUtil.connection.createStatement();
-        
-        // Execute query
-        DBUtil.resultSet = DBUtil.statement.executeQuery(_query);
-        
-        return DBUtil.resultSet;
+        return this.connection;
     }
     
-    public static void executeCommand(String _query) throws Exception
+    public static DBUtil getInstance() throws SQLException 
     {
-        DBUtil.getConnection();
+        if(instance == null)
+        {
+            instance = new DBUtil();
+        }
+        else if(instance.getConnection().isClosed())
+        {
+            instance = new DBUtil();
+        }
         
-        DBUtil.query = _query;
+        return instance;
+    }
+    
+    public ResultSet selectData(String _query) throws Exception
+    {
+        this.query = _query;
         
         // Creating statement
-        DBUtil.statement = DBUtil.connection.createStatement();
+        this.statement = this.connection.createStatement();
         
         // Execute query
-        DBUtil.statement.executeUpdate(_query);
+        this.resultSet = this.statement.executeQuery(_query);
+        
+        return this.resultSet;
+    }
+    
+    public void executeCommand(String _query) throws Exception
+    {
+        this.query = _query;
+        
+        // Creating statement
+        this.statement = this.connection.createStatement();
+        
+        // Execute query
+        this.statement.executeUpdate(_query);
     }
     
     @Override

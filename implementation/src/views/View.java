@@ -56,9 +56,4 @@ public abstract class View
     {
         return null;
     }
-    
-    public JSONObject renderAll()
-    {
-        return null;
-    }
 }

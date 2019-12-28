@@ -57,11 +57,9 @@ public class Main
         HTTPRequest request = new HTTPRequest();
         
         request.object = "UserController";
-        request.method = "login";
+        request.method = "upgradeToPremium";
         
-        request.parameters.put("email", "mahmoud@gmail.com");
-        request.parameters.put("password", "124567");
-
+        request.parameters.put("user_id", "2");
         
         // HTTPRouter
         HTTPRouter router = new HTTPRouter(request);
@@ -74,6 +72,8 @@ public class Main
         {
             System.err.println(_ex.toString());
         }
+        
+        
     }
 }
 

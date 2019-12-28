@@ -6,6 +6,7 @@
 package controllers;
 
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import models.*;
 import views.*;
@@ -21,7 +22,7 @@ public class UserController extends Controller
     public UserView userView;
     public UserDAO userDAO;
 
-    public UserController() 
+    public UserController() throws SQLException 
     {
         this.user = new User();
         this.userView = new UserView();
@@ -79,16 +80,20 @@ public class UserController extends Controller
         user.country = _parameters.get("country");
         user.birthday = _parameters.get("birthday");
         
-        
-        
+        // User DAO
         userDAO.addUser(user);
         
-        userView.user = user;
-        userView.render();
+        // User View
+        userView.render(user);
     }
     
     public void login(HashMap<String, String> _parameters) throws Exception
     {
+        if(_parameters == null)
+        {
+            throw new Exception("_parameters cannot be null");
+        }
+        
         if(!_parameters.containsKey("email"))
         {
             userView.exception();
@@ -108,11 +113,12 @@ public class UserController extends Controller
         
         if(temp != null)
         {
-            userView.user = temp;
-            userView.render();
+            // User View
+            userView.render(temp);
         }
         else
         {
+            // User View
             userView.fail();
         }
     }
@@ -200,8 +206,8 @@ public class UserController extends Controller
         
         if(temp != null)
         {
-            userView.user = temp;
-            userView.render();
+            // User View
+            userView.render(temp);
         }
         else
         {
@@ -217,7 +223,4 @@ public class UserController extends Controller
 
         userDAO.updateUser(temp);
     }
-    
-    
-    
 }
